@@ -1,13 +1,21 @@
 -- select the park name, campground name, open_from_mm, open_to_mm & daily_fee ordered by park name and then campground name
-
-
+select park.name, campground.name, campground.open_from_mm, campground.open_to_mm, campground.daily_fee from campground
+join park on campground.park_id = park.park_id 
+order by park.name, campground.name
 
 -- select the park name and the total number of campgrounds for each park ordered by park name
+select park.name, count(campground.name) as number from campground
+join park on campground.park_id = park.park_id 
+group by park.name
+order by park.name
 
 
 
 -- select the park name, campground name, site number, max occupancy, accessible, max rv length, utilities where the campground name is 'Blackwoods'
-
+select park.name, campground.name, site.site_number, site.max_occupancy, site.accessible, site.max_rv_length, site.utilities from site 
+join campground on site.campground_id = campground.campground_id
+join park on campground.park_id = park.park_id 
+where campground.name = 'Blackwoods'
 
 
 /*
@@ -24,12 +32,17 @@
     Cuyahoga Valley		The Unnamed Primitive Campsites		5
   -------------------------------------------------
 */
-
-
+select park.name, campground.name, count(site.site_number) as number_of_sites from site 
+join campground on site.campground_id = campground.campground_id
+join park on campground.park_id = park.park_id 
+group by park.name,campground.name
+order by park.name, number_of_sites desc
 
 
 -- select site number, reservation name, reservation from and to date ordered by reservation from date
-
+select site.site_number, reservation.name, reservation.from_date, reservation.to_date from reservation
+join site on reservation.site_id = site.site_id
+order by reservation.from_date
 
 
 
@@ -47,4 +60,8 @@
   -------------------------------------------------
 */
 
-
+select campground.name, count(reservation.reservation_id) as total_reservations from reservation
+join site on reservation.site_id = site.site_id
+join campground on site.campground_id = campground.campground_id
+group by campground.name
+order by total_reservations desc
